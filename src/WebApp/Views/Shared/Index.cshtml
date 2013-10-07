@@ -1,0 +1,106 @@
+﻿@using Microsoft.Web.Mvc
+@using RestfulRoutingDemo.WebApp.Common
+@using RestfulRoutingDemo.WebApp.Controllers.Applications
+@using RestfulRoutingDemo.WebApp.Controllers.Applications.Comments.Changes
+@using RestfulRoutingDemo.WebApp.Controllers.Applications.Customer
+@using RestfulRoutingDemo.WebApp.Controllers.Boring
+@using RestfulRoutingDemo.WebApp.Controllers.Products
+@using RestfulRoutingDemo.WebApp.Controllers.Products.Reviews
+@using RestfulRoutingDemo.WebApp.Controllers.Services
+@model RestfulRoutingDemo.WebApp.Controllers.DemoModel
+
+@{
+    ViewBag.Title = string.Format("Showing Action {0}.{1}", Model.Controller, Model.Action);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Current Action</h2>
+<p>Controller: @Model.Controller (@Model.ControllerType)</p>
+<p>Action: @Model.Action</p>
+<p>Route values: @Model.RouteValueSummary</p>
+
+<h2>View the Routes</h2>
+<p>View routes using the built-in <a href="@Url.Content("~/routedebug")">routedebug</a> screen.</p>
+
+<h2>Example URLs</h2>
+<p>Generated using static reflection support in Microsoft.Web.Mvc (in Mvc4Futures NuGet package)</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Example        
+            </th>
+            <th>URL        
+            </th>
+            <th>
+                Description
+            </th>
+        </tr>
+    </thead>
+    <tr>
+        <td>List Resources</td>
+        <td>@Html.ActionLink((ApplicationsController c) => c.Index(), "Applications")</td>
+    </tr>
+    <tr>
+        <td>Show Resource</td>
+        <td>@Html.ActionLink((ApplicationsController c) => c.Show("1234"), "Show Application 1234")</td>
+    </tr>
+    <tr>
+        <td>Update Resource</td>
+        <td>
+            <form method="POST" action="@Url.Action((ApplicationsController c) => c.Update("1234"))">
+                @Html.HttpMethodOverride(HttpVerbs.Put)
+                @Html.SubmitButton("save", "Save Application 1234")
+            </form>
+        </td>
+        <td>URL generated in form tag (note method override via hidden field)</td>
+    </tr>
+    <tr>
+        <td>Create Resource</td>
+        <td>
+            <form method="POST" action="@Url.Action((ApplicationsController c) => c.Create())">
+                @Html.SubmitButton("save", "Create Application")
+            </form>
+
+        </td>
+        <td>URL generated in form tag</td>
+    </tr>
+    <tr>
+        <td>Nested Resource</td>
+        <td>@Html.ActionLink((CustomerController c) => c.Show("1234"), "Customer of Application 1234")</td>
+    </tr>
+    <tr>
+        <td>Nested Resource (2 levels)</td>
+        <td>@Html.ActionLink((ChangesController c) => c.Show("1234", "33", "2"), "Change within Comments within Application")</td>
+    </tr>
+    <tr>
+        <td>Different top level resource</td>
+        <td>@Html.ActionLink((ServicesController c) => c.Index(), "Services")</td>
+        <td>There is more than one ServicesController. Using a controller action expression identifies the controller type, allowing the correct route to be selected.</td>
+    </tr>
+    <tr>
+        <td>Nested Resource with same controller name as above</td>
+        <td>@Html.ActionLink((RestfulRoutingDemo.WebApp.Controllers.Applications.Services.ServicesController c) => c.Show("1234"), "Services for Application 1234")</td>
+    </tr>
+    <tr>
+        <td>Resource using custom id parameter, {code} instead of {id}</td>
+        <td>@Html.ActionLink((ProductsController c) => c.Show("ABC-0001"), "Show Product ABC-0001")</td>
+    </tr>
+    <tr>
+        <td>Child resource of resource with custom id parameter, {productCode} instead of {productId}</td>
+        <td>@Html.ActionLink((ReviewsController c) => c.Show("ABC-0001", "1234"), "Show Product ABC-0001, Review 1234")</td>
+    </tr>
+
+    <tr>
+        <td>Regular route - default action</td>
+        <td>@Html.ActionLink((BoringController c) => c.Index(), "Regular Route - Default Action")</td>
+        <td></td>
+    </tr>
+        <tr>
+        <td>Regular route - custom action</td>
+        <td>@Html.ActionLink((BoringController c) => c.Action2(), "Regular Route - Custom Action")</td>
+        <td></td>
+    </tr>
+
+</table>
+
+
